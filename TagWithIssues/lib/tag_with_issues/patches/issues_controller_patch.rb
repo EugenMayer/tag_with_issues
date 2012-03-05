@@ -15,8 +15,8 @@ module TagWithIssues
 
       module InstanceMethods
         def tag
-          logger.info "tag you're it"
           @issues.sort!
+          @major_version = Setting.plugin_tag_with_issues['major_version']
         end
       end
     end

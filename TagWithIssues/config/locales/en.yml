@@ -1,5 +1,16 @@
 # English strings go here for Rails i18n
 en:
+  optional: "optional"
+  from_config: "from config"
+  the_tag_name_will_be: "The tag name will be"
+  overwrites_choices_with_version_numbers: "Overwrites choices with version numbers"
   button_tag: "Tag"
-  label_tag_selected_issues: "Tag selected items"
-  label_major_version: "Major version (X.y.z-ix.iy)"
+  label_tag_name: "Tag name"
+  label_branch: "Branch"
+  label_commit: "Commit"
+  label_tag_with_selected_issues: "Create a tag with the selected issues"
+  label_major_version: "Major version (X.y.z-extra)"
+  label_major_version_short: "Major"
+  label_minor_version_short: "Minor"
+  label_internal_version_extra_short: "Extra"
+  label_choose_custom_tag_name: "Choose custom tag name"

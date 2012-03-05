@@ -11,6 +11,7 @@ Redmine::Plugin.register :tag_with_issues do
   end
   settings :partial => 'settings/tag_with_issues',
     :default => {
+        # TODO: this should be a project-wide setting not a global setting
         'major_version' => '1',
       }
 end

@@ -1,5 +1,61 @@
-<h2><%= l(:label_tag_selected_issues) %></h2>
+<h2><%= l(:label_tag_with_selected_issues) %></h2>
 
 <ul><%= @issues.collect {|i| content_tag('li',link_to(h("#{i.tracker} ##{i.id}"), { :action => 'show', :id => i }) + h(": #{i.subject}")) }.join("\n") %></ul>
 
+<% form_tag(:action => 'create_tag') do %>
+<%= @issues.collect {|i| hidden_field_tag('ids[]', i.id)}.join %>
 
+<div class="box tabular">
+<fieldset class="tagname">
+<legend><%= l(:label_tag_name) %></legend>
+
+<div class="splitcontentleft">
+<p>
+    <label><%= l(:label_major_version_short) %></label>
+    <%= hidden_field_tag 'tagName[major_version]', @major_version %><%= @major_version %>
+    (<%= l(:from_config)%>)
+</p>
+
+<p>
+    <label><%= l(:label_minor_version_short) %></label>
+    <%= text_field_tag 'tagName[minor_version]', '', :size => 5 %>
+</p>
+
+<p>
+    <label><%= l(:label_internal_version_extra_short) %></label>
+    <%= text_field_tag 'tagName[internal_version_extra]', '', :size => 15 %>
+    (<%= l(:optional)%>)
+</p>
+</div>
+
+<div class="splitcontentright">
+<p>
+    <label><%= l(:label_choose_custom_tag_name) %></label>
+    <%= text_field_tag 'tagName[custom]', '', :size => 25 %>
+    <br>
+    (<%= l(:overwrites_choices_with_version_numbers)%>)
+</p>
+</div>
+
+<div class="splitcontentright">
+<p>
+    <!-- TODO: update this dynamicaly -->
+    <%= l :the_tag_name_will_be %>: <%= @major_version %>.<%= l :label_minor_version_short%>-<%= l :label_internal_version_extra_short%>
+</p>
+</div>
+</fieldset>
+
+<fieldset class="branch">
+<legend><%= l(:label_commit) %></legend>
+<p>
+    <label for='branch_id'><%= l(:label_branch) %></label>
+    <%= select_tag('branch_id', options_from_collection_for_select({}, :id, :name)) %>
+</p>
+<p>
+    <label for='commit_id'><%= l(:label_commit) %></label>
+    <%= select_tag('branch_id', options_from_collection_for_select({}, :id, :name)) %>
+</p>
+</fieldset>
+</div>
+<p><%= submit_tag l(:button_submit) %></p>
+<% end %>
