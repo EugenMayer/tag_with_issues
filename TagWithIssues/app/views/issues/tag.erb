@@ -1,0 +1,5 @@
+<h2><%= l(:label_tag_selected_issues) %></h2>
+
+<ul><%= @issues.collect {|i| content_tag('li',link_to(h("#{i.tracker} ##{i.id}"), { :action => 'show', :id => i }) + h(": #{i.subject}")) }.join("\n") %></ul>
+
+

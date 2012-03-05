@@ -1,0 +1,5 @@
+# English strings go here for Rails i18n
+en:
+  button_tag: "Tag"
+  label_tag_selected_issues: "Tag selected items"
+  label_major_version: "Major version (X.y.z-ix.iy)"

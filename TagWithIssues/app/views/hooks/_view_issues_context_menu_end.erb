@@ -1,0 +1,5 @@
+<li class="tag">
+  <%= context_menu_link l(:button_tag),
+                        {:controller => 'issues', :action => 'tag', :ids => @issues.collect(&:id)},
+                        :method => :post, :class => 'context_item' %>
+</li>
