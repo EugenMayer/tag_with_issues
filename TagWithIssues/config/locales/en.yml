@@ -15,3 +15,5 @@ en:
   label_internal_version_extra_short: "Extra"
   label_choose_custom_tag_name: "Choose custom tag name"
   label_existing_tags: "Existing tags"
+  notice_successfully_created_tag: "Successfully created tag"
+  error_creating_tag: "Could not create tag"

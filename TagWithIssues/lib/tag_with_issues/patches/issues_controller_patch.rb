@@ -38,6 +38,14 @@ module TagWithIssues
         end
         
         def create_tag
+          success = false
+
+          if success
+            flash[:notice] = l(:notice_successfully_created_tag)
+          else
+            flash[:error] = l(:error_creating_tag)
+          end
+          redirect_to :controller => 'projects', :action => 'show', :id => @project.id
         end
         
         private

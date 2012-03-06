@@ -7,7 +7,7 @@ Redmine::Plugin.register :tag_with_issues do
   version '0.0.1'
   url 'https://bugtracking.kontextwork.de/issues/676'
   project_module :tag_with_issues do
-    permission :tag_with_issues, {:issues => [:tag]}, :require => :member
+    permission :tag_with_issues, {:issues => [:tag, :create_tag]}, :require => :member
   end
   settings :partial => 'settings/tag_with_issues',
     :default => {
