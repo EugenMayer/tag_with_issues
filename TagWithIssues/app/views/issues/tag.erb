@@ -37,19 +37,19 @@
 </p>
 </div>
 
-<div class="splitcontentright">
 <p>
     <!-- TODO: update this dynamicaly -->
     <%= l :the_tag_name_will_be %>: <%= @major_version %>.<%= l :label_minor_version_short%>-<%= l :label_internal_version_extra_short%>
 </p>
-</div>
 </fieldset>
 
 <fieldset class="branch">
 <legend><%= l(:label_commit) %></legend>
 <p>
-    <label for='branch_id'><%= l(:label_branch) %></label>
-    <%= select_tag('branch_id', options_from_collection_for_select({}, :id, :name)) %>
+    <label for='branch'><%= l(:label_branch) %></label>
+  <% if !@repository.branches.nil? && @repository.branches.length > 0 -%>
+    <%= select_tag :branch, options_for_select(@repository.branches,@repository.default_branch), :id => 'branch' %>
+  <% end -%>
 </p>
 <p>
     <label for='commit_id'><%= l(:label_commit) %></label>
@@ -59,3 +59,10 @@
 </div>
 <p><%= submit_tag l(:button_submit) %></p>
 <% end %>
+
+
+<% if !@repository.tags.nil? && @repository.tags.length > 0 -%>
+    <h2><%= l(:label_existing_tags) %></h2>
+    <ul><%= @repository.tags.collect {|t| content_tag('li', t) }.join("\n") %></ul>
+<% end -%>
+

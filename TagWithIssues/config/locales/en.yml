@@ -14,3 +14,4 @@ en:
   label_minor_version_short: "Minor"
   label_internal_version_extra_short: "Extra"
   label_choose_custom_tag_name: "Choose custom tag name"
+  label_existing_tags: "Existing tags"
