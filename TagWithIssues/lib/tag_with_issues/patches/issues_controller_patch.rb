@@ -20,7 +20,21 @@ module TagWithIssues
         def tag
           @issues.sort!
           @major_version = Setting.plugin_tag_with_issues['major_version']
-          has_branches = (!@repository.branches.nil? && @repository.branches.length > 0)
+          @repository.fetch_changesets if Setting.autofetch_changesets?
+          @has_branches = (!@repository.branches.nil? && @repository.branches.length > 0)
+          branches = @has_branches ? @repository.branches : [@repository.default_branch]
+          @changesets_by_branch = branches.inject({}) { |h,b| h[b] = @repository.latest_changesets("", b); h }
+
+          @tags = @repository.tags.collect do |tag|
+            # changeset = @repository.find_changeset_by_name(tag)
+            changeset = @repository.latest_changesets("", tag).first
+            tag_info = {:name => tag, :id => "?", :commit_message => "<no commit message>"}
+            unless changeset.nil?
+              tag_info[:id] = changeset.format_identifier
+              tag_info[:commit_message] = changeset.comments
+            end
+            tag_info
+          end
         end
         
         def create_tag

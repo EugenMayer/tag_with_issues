@@ -1,8 +1,12 @@
+<% content_for :header_tags do %>
+  <%= javascript_include_tag 'tag_with_issues_update_visibility', :plugin => :tag_with_issues %>
+<% end %>
+
 <h2><%= l(:label_tag_with_selected_issues) %></h2>
 
 <ul><%= @issues.collect {|i| content_tag('li',link_to(h("#{i.tracker} ##{i.id}"), { :action => 'show', :id => i }) + h(": #{i.subject}")) }.join("\n") %></ul>
 
-<% form_tag(:action => 'create_tag') do %>
+<% form_tag(:action => 'create_tag') do -%>
 <%= @issues.collect {|i| hidden_field_tag('ids[]', i.id)}.join %>
 
 <div class="box tabular">
@@ -38,7 +42,7 @@
 </div>
 
 <p>
-    <!-- TODO: update this dynamicaly -->
+    <!-- TODO: update this dynamically -->
     <%= l :the_tag_name_will_be %>: <%= @major_version %>.<%= l :label_minor_version_short%>-<%= l :label_internal_version_extra_short%>
 </p>
 </fieldset>
@@ -47,22 +51,27 @@
 <legend><%= l(:label_commit) %></legend>
 <p>
     <label for='branch'><%= l(:label_branch) %></label>
-  <% if !@repository.branches.nil? && @repository.branches.length > 0 -%>
+  <% if @has_branches -%>
     <%= select_tag :branch, options_for_select(@repository.branches,@repository.default_branch), :id => 'branch' %>
   <% end -%>
 </p>
-<p>
+<p id="commit-selects">
     <label for='commit_id'><%= l(:label_commit) %></label>
-    <%= select_tag('branch_id', options_from_collection_for_select({}, :id, :name)) %>
+    <% @changesets_by_branch.collect do |branch,changesets| -%>
+        <%= select_tag('commit_id', options_for_select(changesets.collect { |c|
+          ["#{c.format_identifier}" + (c.short_comments.blank? ? '' : (": #{c.short_comments}")), c.identifier ] }),
+                       :id => branch, :style => "display:none;") %>
+    <% end -%>
 </p>
 </fieldset>
 </div>
 <p><%= submit_tag l(:button_submit) %></p>
-<% end %>
+<% end -%>
 
 
 <% if !@repository.tags.nil? && @repository.tags.length > 0 -%>
     <h2><%= l(:label_existing_tags) %></h2>
-    <ul><%= @repository.tags.collect {|t| content_tag('li', t) }.join("\n") %></ul>
+    <%= @tags.collect {|t| content_tag('h3', "#{t[:name]} (#{t[:id]})") + "\n" +
+                           content_tag('p', t[:commit_message]) }.join("\n") %>
 <% end -%>
 
