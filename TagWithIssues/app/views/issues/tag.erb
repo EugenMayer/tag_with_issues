@@ -71,7 +71,23 @@
 
 <% if !@repository.tags.nil? && @repository.tags.length > 0 -%>
     <h2><%= l(:label_existing_tags) %></h2>
-    <%= @tags.collect {|t| content_tag('h3', "#{t[:name]} (#{t[:id]})") + "\n" +
-                           content_tag('p', t[:commit_message]) }.join("\n") %>
+    <table class="list">
+      <thead>
+        <tr>
+          <th>Tag</th>
+          <th>Commit</th>
+          <th>Commit message</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @tags.each do |t| -%>
+          <tr>
+            <td><%= t[:name] %></td>
+            <td><%= t[:id] %></td>
+            <td><%= t[:commit_message] %></td>
+          </tr>
+        <% end -%>
+      </tbody>
+    </table>
 <% end -%>
 
