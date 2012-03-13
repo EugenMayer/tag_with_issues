@@ -17,3 +17,4 @@ en:
   label_existing_tags: "Existing tags"
   notice_successfully_created_tag: "Successfully created tag"
   error_creating_tag: "Could not create tag"
+  error_tag_name_insufficient: "Must supply at least a major and minor version or a custom tag name"

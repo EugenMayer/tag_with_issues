@@ -16,18 +16,18 @@
 <div class="splitcontentleft">
 <p>
     <label><%= l(:label_major_version_short) %></label>
-    <%= hidden_field_tag 'tagName[major_version]', @major_version %><%= @major_version %>
+    <%= hidden_field_tag 'tag_name_major_version', @major_version %><%= @major_version %>
     (<%= l(:from_config)%>)
 </p>
 
 <p>
     <label><%= l(:label_minor_version_short) %></label>
-    <%= text_field_tag 'tagName[minor_version]', '', :size => 5 %>
+    <%= text_field_tag 'tag_name_minor_version', '', :size => 5 %>
 </p>
 
 <p>
     <label><%= l(:label_internal_version_extra_short) %></label>
-    <%= text_field_tag 'tagName[internal_version_extra]', '', :size => 15 %>
+    <%= text_field_tag 'tag_name_internal_version_extra', '', :size => 15 %>
     (<%= l(:optional)%>)
 </p>
 </div>
@@ -35,7 +35,7 @@
 <div class="splitcontentright">
 <p>
     <label><%= l(:label_choose_custom_tag_name) %></label>
-    <%= text_field_tag 'tagName[custom]', '', :size => 25 %>
+    <%= text_field_tag 'tag_name_custom', '', :size => 25 %>
     <br>
     (<%= l(:overwrites_choices_with_version_numbers)%>)
 </p>

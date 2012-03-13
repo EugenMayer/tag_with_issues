@@ -13,6 +13,8 @@ module TagWithIssues
           
           before_filter :check_unique_project, :only => [:tag, :create_tag]
           before_filter :find_repository, :only => [:tag, :create_tag]
+          before_filter :find_tag_name, :only => [:create_tag]
+          before_filter :find_commit, :only => [:create_tag]
         end
       end
 
@@ -43,7 +45,7 @@ module TagWithIssues
           if success
             flash[:notice] = l(:notice_successfully_created_tag)
           else
-            flash[:error] = l(:error_creating_tag)
+            flash[:error] = l(:error_creating_tag) + " (Tag: '#{@tag_name}' commit: '#{@commit.identifier}')"
           end
           redirect_to :controller => 'projects', :action => 'show', :id => @project.id
         end
@@ -60,6 +62,30 @@ module TagWithIssues
         def find_repository
           @repository = @project.repository
           (render_404; return false) unless @repository
+        rescue ActiveRecord::RecordNotFound
+          render_404
+        end
+
+        def find_tag_name
+          @tag_name = params[:tag_name_custom]
+          return true unless @tag_name.empty?
+
+          if params[:tag_name_major_version].empty? or params[:tag_name_minor_version].empty?
+            render_error(:message => l(:error_tag_name_insufficient),
+                          :status => 404)
+            return false
+          end
+
+          @tag_name = "#{params[:tag_name_major_version]}-#{params[:tag_name_minor_version]}"
+          unless params[:tag_name_internal_version_extra].empty?
+            @tag_name += "-#{params[:tag_name_internal_version_extra]}"
+          end
+        end
+
+        def find_commit
+          @commit_id = params[:commit_id]
+          raise ActiveRecord::RecordNotFound if @commit_id.empty?
+          @commit = @repository.find_changeset_by_name(@commit_id)
         rescue ActiveRecord::RecordNotFound
           render_404
         end
