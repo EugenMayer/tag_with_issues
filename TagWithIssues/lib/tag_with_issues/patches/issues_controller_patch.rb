@@ -21,21 +21,36 @@ module TagWithIssues
       module InstanceMethods
         def tag
           @issues.sort!
-          @major_version = Setting.plugin_tag_with_issues['major_version']
+          @tag_name_major_version = Setting.plugin_tag_with_issues['major_version']
+          @can_edit_major_version = @tag_name_major_version.empty?
+          @tag_name_minor_version, @tag_name_internal_version_extra, @tag_name_custom = "", "", ""
           @repository.fetch_changesets if Setting.autofetch_changesets?
           @has_branches = (!@repository.branches.nil? && @repository.branches.length > 0)
           branches = @has_branches ? @repository.branches : [@repository.default_branch]
           @changesets_by_branch = branches.inject({}) { |h,b| h[b] = @repository.latest_changesets("", b); h }
 
           @tags = @repository.tags.collect do |tag|
-            # changeset = @repository.find_changeset_by_name(tag)
             changeset = @repository.latest_changesets("", tag).first
             tag_info = {:name => tag, :id => "?", :commit_message => "<no commit message>"}
             unless changeset.nil?
               tag_info[:id] = changeset.format_identifier
               tag_info[:commit_message] = changeset.comments
+              tag_info[:committed_on] = changeset.committed_on
             end
             tag_info
+          end
+          @tags = @tags.sort_by { |t| t[:committed_on]}.reverse
+
+          unless @tags.empty?
+            latest_tag_name = @tags[0][:name]
+            if latest_tag_name =~ /\A([^\.]*)\.([^-]*)(-(.*))?\Z/
+              @tag_name_minor_version, @tag_name_internal_version_extra = $2, $4
+              if @can_edit_major_version
+                @tag_name_major_version = $1
+              end
+            else
+              @tag_name_custom = latest_tag_name
+            end
           end
         end
         
