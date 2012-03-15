@@ -55,12 +55,23 @@ module TagWithIssues
         end
         
         def create_tag
-          success = false
+          tag_command = Setting.plugin_tag_with_issues['git_tag_command']
+          if tag_command.nil? or tag_command.empty?
+            render_error "Please configure the tag command in the plugin's config first"
+            return false
+          end
+
+          tag_command = tag_command.gsub(/<commit_id>/, Redmine::Scm::Adapters::AbstractAdapter::shell_quote(@commit_id))
+          tag_command = tag_command.gsub(/<tag_name>/, Redmine::Scm::Adapters::AbstractAdapter::shell_quote(@tag_name))
+          tag_command = tag_command.gsub(/<repository_path>/, @repository.url)
+          logger.debug "Executing git tag command '#{tag_command}'"
+          success = system(tag_command)
+          logger.debug "Return value '#{$?}'"
 
           if success
             flash[:notice] = l(:notice_successfully_created_tag)
           else
-            flash[:error] = l(:error_creating_tag) + " (Tag: '#{@tag_name}' commit: '#{@commit.identifier}')"
+            flash[:error] = l(:error_creating_tag) + " (Tag: '#{@tag_name}' commit: '#{@commit.identifier}' Repo:'#{@repository.url}')"
           end
           redirect_to :controller => 'projects', :action => 'show', :id => @project.id
         end
@@ -87,13 +98,19 @@ module TagWithIssues
 
           if params[:tag_name_major_version].empty? or params[:tag_name_minor_version].empty?
             render_error(:message => l(:error_tag_name_insufficient),
-                          :status => 404)
+                          :status => 500)
             return false
           end
 
           @tag_name = "#{params[:tag_name_major_version]}-#{params[:tag_name_minor_version]}"
           unless params[:tag_name_internal_version_extra].empty?
             @tag_name += "-#{params[:tag_name_internal_version_extra]}"
+          end
+
+          if @repository.tags.include? @tag_name
+            render_error(:message => l(:error_tag_name_already_in_use),
+                         :status => 500)
+            return false
           end
         end
 
@@ -103,6 +120,18 @@ module TagWithIssues
           @commit = @repository.find_changeset_by_name(@commit_id)
         rescue ActiveRecord::RecordNotFound
           render_404
+        end
+
+        def in_tmpdir
+          dirname = "#{Time.now.to_i}#{rand(1000)}"
+          while File.exists? dirname
+            dirname += rand(1000)
+          end
+          tmpdir = File.expand_path dirname
+          FileUtils.mkdir_p(tmpdir)
+          yield(tmpdir)
+        ensure
+          FileUtils.rm_rf(tmpdir) if File.exists?(tmpdir)
         end
       end
     end

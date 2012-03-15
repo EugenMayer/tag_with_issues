@@ -15,6 +15,8 @@ en:
   label_internal_version_extra_short: "Extra"
   label_choose_custom_tag_name: "Choose custom tag name"
   label_existing_tags: "Existing tags"
+  label_tag_command: "Tag command (use placeholders <repository_path>, <tag_name> and <commit_id> as needed)"
   notice_successfully_created_tag: "Successfully created tag"
   error_creating_tag: "Could not create tag"
   error_tag_name_insufficient: "Must supply at least a major and minor version or a custom tag name"
+  error_tag_name_already_in_use: "This tag name is already in use"

@@ -13,6 +13,9 @@ Redmine::Plugin.register :tag_with_issues do
     :default => {
         # TODO: this should be a project-wide setting not a global setting
         'major_version' => '1',
+        'git_tag_command' => "git --git-dir=<repository_path> tag <tag_name> <commit_id>",
+        # use with gitolite and custom tagrepo script
+        # sudo -i -u gitolite sh -c '/usr/local/bin/tagrepo ~/<repository_path> <tag_name> <commit_id>'
       }
 end
 
