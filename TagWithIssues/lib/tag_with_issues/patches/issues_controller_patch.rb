@@ -121,18 +121,6 @@ module TagWithIssues
         rescue ActiveRecord::RecordNotFound
           render_404
         end
-
-        def in_tmpdir
-          dirname = "#{Time.now.to_i}#{rand(1000)}"
-          while File.exists? dirname
-            dirname += rand(1000)
-          end
-          tmpdir = File.expand_path dirname
-          FileUtils.mkdir_p(tmpdir)
-          yield(tmpdir)
-        ensure
-          FileUtils.rm_rf(tmpdir) if File.exists?(tmpdir)
-        end
       end
     end
   end    
