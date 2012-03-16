@@ -16,6 +16,8 @@ en:
   label_choose_custom_tag_name: "Choose custom tag name"
   label_existing_tags: "Existing tags"
   label_tag_command: "Tag command (use placeholders <repository_path>, <tag_name> and <commit_id> as needed)"
+  label_tag_field_name: "Custom Field name for tags (should use the custom field format 'Tags')"
+  label_tags: "Tags"
   notice_successfully_created_tag: "Successfully created tag"
   error_creating_tag: "Could not create tag"
   error_tag_name_insufficient: "Must supply at least a major and minor version or a custom tag name"

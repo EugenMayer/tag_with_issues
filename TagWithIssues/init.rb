@@ -13,9 +13,10 @@ Redmine::Plugin.register :tag_with_issues do
     :default => {
         # TODO: this should be a project-wide setting not a global setting
         'major_version' => '1',
-        'git_tag_command' => "git --git-dir=<repository_path> tag <tag_name> <commit_id>",
+        'git_tag_command' => 'git --git-dir=<repository_path> tag <tag_name> <commit_id>',
         # use with gitolite and custom tagrepo script
         # sudo -i -u gitolite sh -c '/usr/local/bin/tagrepo ~/<repository_path> <tag_name> <commit_id>'
+        'tag_field_name' => 'Tags',
       }
 end
 
@@ -25,3 +26,5 @@ Dispatcher.to_prepare :tag_with_issues do
 end
 
 require 'tag_with_issues/hooks/view_issues_context_menu_hook'
+
+require 'tag_with_issues/custom_field_format/tag_custom_field_format'

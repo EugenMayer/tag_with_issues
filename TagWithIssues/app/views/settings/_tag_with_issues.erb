@@ -4,4 +4,8 @@
 
   <%=content_tag(:label, l(:label_tag_command)) %>
   <%=text_field_tag 'settings[git_tag_command]', @settings['git_tag_command'] %><br/>
+
+  <%=content_tag(:label, l(:label_tag_field_name)) %>
+  <%=text_field_tag 'settings[tag_field_name]', @settings['tag_field_name'] %><br/>
+
 </p>
