@@ -5,6 +5,7 @@ class TagsCustomFieldFormat < Redmine::CustomFieldFormat
     # It would be nicer to get the field we are currently working on, but this doesn't seem possible
     begin
       tag_field_name = Setting.plugin_tag_with_issues['tag_field_name']
+      raise ActiveRecord::RecordNotFound if tag_field_name.nil? or tag_field_name.empty?
       tag_field = CustomField.find(:first, :conditions => ["name=?", tag_field_name])
       raise ActiveRecord::RecordNotFound if tag_field.nil?
     rescue ActiveRecord::RecordNotFound

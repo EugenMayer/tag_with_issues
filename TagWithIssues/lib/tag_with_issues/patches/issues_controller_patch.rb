@@ -72,6 +72,7 @@ module TagWithIssues
             # tagging was successful now try to add the new tag to the issues custom tags field
             begin
               tag_field_name = Setting.plugin_tag_with_issues['tag_field_name']
+              raise ActiveRecord::RecordNotFound if tag_field_name.nil? or tag_field_name.empty?
               tag_field = CustomField.find(:first, :conditions => ["name=?", tag_field_name])
               raise ActiveRecord::RecordNotFound if tag_field.nil?
             rescue ActiveRecord::RecordNotFound
