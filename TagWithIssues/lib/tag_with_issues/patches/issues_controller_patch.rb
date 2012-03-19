@@ -80,6 +80,7 @@ module TagWithIssues
             end
             failed_issues = []
 
+            errors = []
             @issues.each do |issue|
               # TODO is there an easier way to do this?
               custom_field_hash = issue.custom_field_values.inject({}) { |h, v| h[v.custom_field_id] = v.value; h }
@@ -90,13 +91,25 @@ module TagWithIssues
                 custom_field_hash[tag_field.id] = "#{tags},[#{@tag_name}]"
               end
               issue.custom_field_values = custom_field_hash
-              failed_issues << issue unless issue.save
+              tag_field_updated = issue.save
+              failed_issues << issue unless tag_field_updated
+              logger.debug "Calling hook controller_issues_tag_after_save"
+              hook_context = { :params => params, :issue => issue, :tag_field_updated => tag_field_updated,
+                               :hook_response => {:success => true, :error_message => ""} }
+              call_hook(:controller_issues_tag_after_save, hook_context)
+              logger.debug "Hook controller_issues_tag_after_save returned " + hook_context[:hook_response][:success].to_s
+              unless hook_context[:hook_response][:success]
+                  errors << "#{l(:error_in_hook)} (#{issue.id}): #{hook_context[:hook_response][:error_message]}"
+              end
             end
 
-            if failed_issues.empty?
+            if failed_issues.any?
+              errors.insert(0, l(:error_adding_tag_to_custom_field + ' ' + failed_issues.collect { |i| i.id }.join(', ')))
+            end
+            if errors.empty?
               flash[:notice] = l(:notice_successfully_created_tag)
             else
-              flash[:error] = l(:error_adding_tag_to_custom_field + ' ' + failed_issues.collect { |i| i.id }.join(', '))
+              flash[:error] = errors.join("<br>")
             end
           else
             flash[:error] = l(:error_creating_tag) + " (Tag: '#{@tag_name}' commit: '#{@commit.identifier}' Repo:'#{@repository.url}')"
