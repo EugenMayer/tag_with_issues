@@ -69,7 +69,35 @@ module TagWithIssues
           logger.debug "Return value '#{$?}'"
 
           if success
-            flash[:notice] = l(:notice_successfully_created_tag)
+            # tagging was successful now try to add the new tag to the issues custom tags field
+            begin
+              tag_field_name = Setting.plugin_tag_with_issues['tag_field_name']
+              tag_field = CustomField.find(:first, :conditions => ["name=?", tag_field_name])
+              raise ActiveRecord::RecordNotFound if tag_field.nil?
+            rescue ActiveRecord::RecordNotFound
+              flash[:error] = l(:error_could_not_find_tag_field)
+              return
+            end
+            failed_issues = []
+
+            @issues.each do |issue|
+              # TODO is there an easier way to do this?
+              custom_field_hash = issue.custom_field_values.inject({}) { |h, v| h[v.custom_field_id] = v.value; h }
+              tags = custom_field_hash[tag_field.id]
+              if tags.nil?
+                custom_field_hash[tag_field.id] = "[#{@tag_name}]"
+              else
+                custom_field_hash[tag_field.id] = "#{tags},[#{@tag_name}]"
+              end
+              issue.custom_field_values = custom_field_hash
+              failed_issues << issue unless issue.save
+            end
+
+            if failed_issues.empty?
+              flash[:notice] = l(:notice_successfully_created_tag)
+            else
+              flash[:error] = l(:error_adding_tag_to_custom_field + ' ' + failed_issues.collect { |i| i.id }.join(', '))
+            end
           else
             flash[:error] = l(:error_creating_tag) + " (Tag: '#{@tag_name}' commit: '#{@commit.identifier}' Repo:'#{@repository.url}')"
           end

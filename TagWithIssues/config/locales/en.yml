@@ -22,3 +22,5 @@ en:
   error_creating_tag: "Could not create tag"
   error_tag_name_insufficient: "Must supply at least a major and minor version or a custom tag name"
   error_tag_name_already_in_use: "This tag name is already in use"
+  error_adding_tag_to_custom_field: "The tag was created successfully but I could not add it to the following tickets: "
+  error_could_not_find_tag_field: "The tag was created successfully but I could not find the configured custom field to add tags to issues"
