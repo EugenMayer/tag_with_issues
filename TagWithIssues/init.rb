@@ -23,6 +23,7 @@ end
 require 'dispatcher'
 Dispatcher.to_prepare :tag_with_issues do
   require_dependency 'tag_with_issues/patches/issues_controller_patch'
+  require_dependency 'tag_with_issues/patches/git_adapter_patch'
 end
 
 require 'tag_with_issues/hooks/view_issues_context_menu_hook'

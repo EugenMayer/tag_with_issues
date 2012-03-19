@@ -69,6 +69,7 @@ module TagWithIssues
           logger.debug "Return value '#{$?}'"
 
           if success
+            clear_tag_cache
             # tagging was successful now try to add the new tag to the issues custom tags field
             begin
               tag_field_name = Setting.plugin_tag_with_issues['tag_field_name']
@@ -163,6 +164,19 @@ module TagWithIssues
         rescue ActiveRecord::RecordNotFound
           render_404
         end
+
+        def clear_tag_cache
+          if @repository.scm.respond_to?(:clear_tag_cache)
+            @repository.scm.clear_tag_cache
+            logger.debug "Cleared tag cache of SCM adapter"
+          end
+
+          # special case for redmine_git_hosting plugin
+          if defined?(GitHosting) == 'constant' and GitHosting.class == Module and GitHosting.respond_to?(:clear_cache_for_project)
+              GitHosting.clear_cache_for_project(@project)
+          end
+        end
+
       end
     end
   end    
