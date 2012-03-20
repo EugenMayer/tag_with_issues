@@ -1,3 +1,5 @@
+<!--  use this to open the screen in the same window -->
+
 <!-- <li class="tag">
   <%= context_menu_link l(:button_tag),
                         {:controller => 'issues', :action => 'tag', :ids => @issues.collect(&:id)},
@@ -5,6 +7,7 @@
 </li>
 -->
 
+<!-- HACK open link in new window. Not very nice, but there is no way to get a target through context_menu_link -->
 <li class="tag">
   <% form_tag({:controller => 'issues', :action => 'tag', :ids => @issues.collect(&:id)},
                :method => :post, :target => "_blank", :class => 'context_item') do %>

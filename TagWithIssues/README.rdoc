@@ -1,0 +1,42 @@
+= Chiliproject/Redmine SCM Tag with Issues Plugin
+
+Allows to select issues and create a tag in the the repository of the associated project (currently only implemented
+for git). The state of all selected issues is then changed to a new (configurable) state (e.g. "released"). You can add
+a custom field to issues which will be filled with the created tags and allows to filter for all issues that were tagged
+with this tag.
+
+== Getting the plugin
+
+A copy of the plugin can be downloaded from {GitHub}[https://github.com/EugenMayer/TagWithIssues]
+
+
+== Installation and Setup
+
+1. Make sure the plugin is installed in +vendor/plugins/tag_with_issues+
+2. Restart your Chiliproject/Redmine web servers (e.g. mongrel, thin, mod_rails)
+3. Activate the module +TagWithIssues+ for the projects you want to use it in
+4. Add the permission to create tags for all roles that should be able to use the module
+5. (optional) Create a custom field for tags. This field has to use the CustomFieldFormat +Tags+ that is added by the plugin
+6. Configure the plugin:
+  * Major Version: If you configure a major verion, it will always be used instead of guessing it from previous tags
+  * RegExp to validate tag names: If all your tag names must satisfy a specific format you can set a regexp here
+  * Tag command: The default (+git --git-dir=<repository_path> tag <tag_name> <commit_id>+) works for local git
+    repositories. If you have the redmine_git_hosting plugin installed, you can change the command to
+    +sudo -i -u gitolite sh -c '/usr/local/bin/tagrepo ~/<repository_path> <tag_name> <commit_id>'+, create a script
+    +/usr/local/bin/tagrepo+ that creates the actual tag with the above command and finally allow your chiliproject user
+    to execute this command as the user gitolite
+  * Tags custom field: if you configured a custom field in step 5, enter its name here
+
+== Usage
+
+In the issues overview select some issues as you would for bulk-edit right click and select "tag" from the context menu.
+Enter a tag name, select a branch and commit and continue.
+The tagname is created as <major>-<minor> or <major>-<minor>-<extra> if no custom tag name is specified.
+
+== License
+
+This plugin is licensed under the GNU AGPL v3. See COPYRIGHT.txt and AGPL.txt for details.
+
+== Sponsoring
+
+The development of this plugin was sponsored by {KontextWork}[http://kontextwork.de]
