@@ -63,7 +63,12 @@
     <label for='commit_id'><%= l(:label_commit) %></label>
     <% @changesets_by_branch.collect do |branch,changesets| -%>
         <%= select_tag('commit_id', options_for_select(changesets.collect { |c|
-          ["#{c.format_identifier}" + (c.short_comments.blank? ? '' : (": #{c.short_comments}")), c.identifier ] }),
+          if c.nil?
+            ["---", ""]
+          else
+            ["#{(@tagged_changesets.include? c)? "Tagged": "Untagged"} #{c.format_identifier}" + (c.short_comments.blank? ? '' : (": #{c.short_comments}")), c.identifier ]
+          end
+        }),
                        :id => branch, :style => "display:none;") %>
     <% end -%>
 </p>

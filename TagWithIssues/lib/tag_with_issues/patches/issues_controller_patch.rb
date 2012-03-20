@@ -29,9 +29,11 @@ module TagWithIssues
           @has_branches = (!@repository.branches.nil? && @repository.branches.length > 0)
           branches = @has_branches ? @repository.branches : [@repository.default_branch]
           @changesets_by_branch = branches.inject({}) { |h,b| h[b] = @repository.latest_changesets("", b); h }
+          @tagged_changesets = []
 
           @tags = @repository.tags.collect do |tag|
             changeset = @repository.latest_changesets("", tag).first
+            @tagged_changesets << changeset
             tag_info = {:name => tag, :id => "?", :commit_message => "<no commit message>"}
             unless changeset.nil?
               tag_info[:id] = changeset.format_identifier
@@ -53,6 +55,23 @@ module TagWithIssues
               @tag_name_custom = latest_tag_name
             end
           end
+
+          # order commits: first show untagged commits then tagged commits. Each list ordered by descending commit date
+          @changesets_by_branch.each do |_, changesets|
+            changesets.sort! do |a,b|
+              if (@tagged_changesets.include? a) == (@tagged_changesets.include? b)
+                b.committed_on <=> a.committed_on or
+                a.format_identifier <=> b.format_identifier
+              elsif @tagged_changesets.include? a
+                1
+              else
+                -1
+              end
+            end
+            first_tagged_index = changesets.index {|c| @tagged_changesets.include? c}
+            changesets.insert(first_tagged_index, nil) unless first_tagged_index.nil? or first_tagged_index == 0
+          end
+
         end
         
         def create_tag
