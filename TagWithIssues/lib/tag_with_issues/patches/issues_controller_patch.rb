@@ -43,7 +43,7 @@ module TagWithIssues
 
           unless @tags.empty?
             latest_tag_name = @tags[0][:name]
-            if latest_tag_name =~ /\A([^\.]*)\.([^-]*)(-(.*))?\Z/
+            if latest_tag_name =~ /\A([^-]*)-([^-]*)(-(.*))?\Z/
               @tag_name_minor_version, @tag_name_internal_version_extra = $2, $4
               if @can_edit_major_version
                 @tag_name_major_version = $1
@@ -145,6 +145,7 @@ module TagWithIssues
             return false
           end
 
+          # TODO Format should be configurable
           @tag_name = "#{params[:tag_name_major_version]}-#{params[:tag_name_minor_version]}"
           unless params[:tag_name_internal_version_extra].empty?
             @tag_name += "-#{params[:tag_name_internal_version_extra]}"
