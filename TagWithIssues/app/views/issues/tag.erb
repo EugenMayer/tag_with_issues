@@ -56,7 +56,7 @@
 <p>
     <label for='branch'><%= l(:label_branch) %></label>
   <% if @has_branches -%>
-    <%= select_tag :branch, options_for_select(@repository.branches,@repository.default_branch), :id => 'branch' %>
+    <%= select_tag :branch, options_for_select(@repository.branches, @youngest_changeset_branch || @repository.default_branch), :id => 'branch' %>
   <% end -%>
 </p>
 <p id="commit-selects">
@@ -68,7 +68,7 @@
           else
             ["#{(@tagged_changesets.include? c)? "Tagged": "Untagged"} #{c.format_identifier}" + (c.short_comments.blank? ? '' : (": #{c.short_comments}")), c.identifier ]
           end
-        }),
+        }, @youngest_changeset.id),
                        :id => branch, :style => "display:none;") %>
     <% end -%>
 </p>

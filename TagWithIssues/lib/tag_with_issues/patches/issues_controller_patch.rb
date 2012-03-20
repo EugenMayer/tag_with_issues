@@ -56,8 +56,10 @@ module TagWithIssues
             end
           end
 
-          # order commits: first show untagged commits then tagged commits. Each list ordered by descending commit date
-          @changesets_by_branch.each do |_, changesets|
+          @youngest_changeset = nil
+          @youngest_changeset_branch = nil
+          @changesets_by_branch.each do |branch, changesets|
+            # order commits: first show untagged commits then tagged commits. Each list ordered by descending commit date
             changesets.sort! do |a,b|
               if (@tagged_changesets.include? a) == (@tagged_changesets.include? b)
                 b.committed_on <=> a.committed_on or
@@ -68,8 +70,20 @@ module TagWithIssues
                 -1
               end
             end
+            # insert dummy option to separate tagged and untagged commits
             first_tagged_index = changesets.index {|c| @tagged_changesets.include? c}
             changesets.insert(first_tagged_index, nil) unless first_tagged_index.nil? or first_tagged_index == 0
+            # select youngest untagged commit as default
+            unless changesets.empty?
+
+              if @youngest_changeset.nil? or
+                   ((@tagged_changesets.include? @youngest_changeset) and (!@tagged_changesets.include? changesets[0])) or
+                   ((@tagged_changesets.include? @youngest_changeset) == (!@tagged_changesets.include? changesets[0]) and
+                       @youngest_changeset.committed_on < changesets[0].committed_on)
+                @youngest_changeset = changesets[0]
+                @youngest_changeset_branch = branch
+              end
+            end
           end
 
         end
