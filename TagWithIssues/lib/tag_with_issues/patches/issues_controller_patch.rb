@@ -14,6 +14,7 @@ module TagWithIssues
           before_filter :check_unique_project, :only => [:tag, :create_tag]
           before_filter :find_repository, :only => [:tag, :create_tag]
           before_filter :find_tag_name, :only => [:create_tag]
+          before_filter :validate_tag_name, :only => [:create_tag]
           before_filter :find_commit, :only => [:create_tag]
         end
       end
@@ -156,6 +157,20 @@ module TagWithIssues
                          :status => 500)
             return false
           end
+        end
+
+        def validate_tag_name
+          tag_validate_regexp = Setting.plugin_tag_with_issues['tag_validate_regexp']
+          return true if tag_validate_regexp.nil? or tag_validate_regexp.empty?
+          unless @tag_name =~ /#{tag_validate_regexp}/
+            render_error(:message => "#{l(:error_tag_name_validation)} (tag name: '#{@tag_name}')",
+                         :status => 500)
+            return false
+          end
+        rescue RegexpError => exc
+          render_error(:message => "#{l(:error_invalid_regexp)}: '#{exc.message}'",
+                       :status => 500)
+          return false
         end
 
         def find_commit
