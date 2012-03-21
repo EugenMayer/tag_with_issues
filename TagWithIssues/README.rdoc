@@ -18,14 +18,14 @@ A copy of the plugin can be downloaded from {GitHub}[https://github.com/EugenMay
 4. Add the permission to create tags for all roles that should be able to use the module
 5. (optional) Create a custom field for tags. This field has to use the CustomFieldFormat +Tags+ that is added by the plugin
 6. Configure the plugin:
-  * Major Version: If you configure a major verion, it will always be used instead of guessing it from previous tags
-  * RegExp to validate tag names: If all your tag names must satisfy a specific format you can set a regexp here
-  * Tag command: The default (+git --git-dir=<repository_path> tag <tag_name> <commit_id>+) works for local git
-    repositories. If you have the redmine_git_hosting plugin installed, you can change the command to
-    +sudo -i -u gitolite sh -c '/usr/local/bin/tagrepo ~/<repository_path> <tag_name> <commit_id>'+, create a script
-    +/usr/local/bin/tagrepo+ that creates the actual tag with the above command and finally allow your chiliproject user
-    to execute this command as the user gitolite
-  * Tags custom field: if you configured a custom field in step 5, enter its name here
+   * Major Version: If you configure a major verion, it will always be used instead of guessing it from previous tags
+   * RegExp to validate tag names: If all your tag names must satisfy a specific format you can set a regexp here
+   * Tag command: The default (<tt>git --git-dir=<repository_path> tag <tag_name> <commit_id></tt>) works for local git
+     repositories. If you have the redmine_git_hosting plugin installed, you can change the command to
+     <tt>sudo -i -u gitolite sh -c '/usr/local/bin/tagrepo ~/<repository_path> <tag_name> <commit_id>'</tt>, create a script
+     +/usr/local/bin/tagrepo+ that creates the actual tag with the above command and finally allow your chiliproject user
+     to execute this command as the user gitolite
+   * Tags custom field: if you configured a custom field in step 5, enter its name here
 
 == Usage
 
