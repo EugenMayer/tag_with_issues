@@ -66,7 +66,7 @@
           if c.nil?
             ["---", ""]
           else
-            ["#{(@tagged_changesets.include? c)? "Tagged": "Untagged"} #{c.format_identifier}" + (c.short_comments.blank? ? '' : (": #{c.short_comments}")), c.identifier ]
+            ["#{(@tagged_changesets.include? c)? "[tagged]": "[untagged]"} #{c.format_identifier} - " + (c.short_comments.blank? ? '' : (": #{c.short_comments}")), c.identifier ]
           end
         }, @youngest_changeset.id),
                        :id => branch, :style => "display:none;") %>
