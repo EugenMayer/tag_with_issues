@@ -121,7 +121,7 @@ module TagWithIssues
               # TODO is there an easier way to do this?
               custom_field_hash = issue.custom_field_values.inject({}) { |h, v| h[v.custom_field_id] = v.value; h }
               tags = custom_field_hash[tag_field.id]
-              if tags.nil?
+              if tags.nil? or tags.empty?
                 custom_field_hash[tag_field.id] = "[#{@tag_name}]"
               else
                 custom_field_hash[tag_field.id] = "#{tags},[#{@tag_name}]"
