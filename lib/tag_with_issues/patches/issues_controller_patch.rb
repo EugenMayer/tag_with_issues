@@ -78,7 +78,7 @@ module TagWithIssues
 
               if @youngest_changeset.nil? or
                    ((@tagged_changesets.include? @youngest_changeset) and (!@tagged_changesets.include? changesets[0])) or
-                   ((@tagged_changesets.include? @youngest_changeset) == (!@tagged_changesets.include? changesets[0]) and
+                   ((@tagged_changesets.include? @youngest_changeset) == (@tagged_changesets.include? changesets[0]) and
                        @youngest_changeset.committed_on < changesets[0].committed_on)
                 @youngest_changeset = changesets[0]
                 @youngest_changeset_branch = branch
